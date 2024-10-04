@@ -12,7 +12,7 @@ namespace PrimeNumbersAgain
         static void Main(string[] args)
         {
             int n, prime;
-            Stopwatch timer = new Stopwatch();
+            var timer = new Stopwatch();
 
             PrintBanner();
             n = GetNumber();
@@ -29,11 +29,44 @@ namespace PrimeNumbersAgain
 
         static int FindNthPrime(int n)
         {
+            n -= 1;
+            int MAX_SIZE = 100000000;
+            List<int> primes = new();
+
+            //static bool IsPrime(int n) => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i != 0);
+            //return 0;
+
+            bool[] isPrime = new bool[MAX_SIZE];
+
+        for (var i = 0; i < MAX_SIZE; i++)
+                isPrime[i] = true;
+
+            for (var p = 2; p * p < MAX_SIZE; p++)
+            {
+                // If IsPrime[p] is not changed,
+                // then it is a prime 
+                if (isPrime[p] == true)
+                {
+                    // Update all multiples of p greater than or 
+                    // equal to the square of it 
+                    // numbers which are multiple of p and are 
+                    // less than p^2 are already been marked. 
+                    for (int i = p * p; i < MAX_SIZE; i += p)
+                        isPrime[i] = false;
+                }
+            }
+
+            // Store all prime numbers 
+            for (var p = 2; p < MAX_SIZE; p++)
+            {
+                if (isPrime[p] == true)
+                    primes.Add(p);
+            }
 
 
-            static bool IsPrime(int n) => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i != 0);
-            return 0;
+            return primes[n];
         }
+    
 
 
         static int GetNumber()
